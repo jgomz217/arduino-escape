@@ -24,6 +24,7 @@
 #define FADESPEED       5
 #define FLASHSPEED      50
 #define MAGLOCK         2
+#define brightness      5
 
 MFRC522 mfrc522_1(SS_PIN1, RST_PIN);  // Create MFRC522 instance
 MFRC522 mfrc522_2(SS_PIN2, RST_PIN);
@@ -55,8 +56,8 @@ void loop() {
   while (compareRFID1() != true || compareRFID2() != true/* && compareRFID3 == true*/) {
     pulseLED();
   }
-    flashLED();
-    digitalWrite(MAGLOCK, LOW);
+  flashLED();
+  digitalWrite(MAGLOCK, LOW);
 }
 
 void flashLED() {
@@ -68,9 +69,10 @@ void flashLED() {
 }
 
 void pulseLED() {
-  for (int r = 0; r < 256; r++) {
-    analogWrite(RED_PIN, r);
-    delay(FADESPEED);
+  analogWrite(RED_PIN, brightness);
+  brightness = brightness + FADESPEED;
+  if (brightness <= 1| brightness >= 255) {
+    FADESPEED = -FADESPEED;
   }
 }
 
